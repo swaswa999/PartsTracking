@@ -4,17 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Flask App{% endblock %}</title>
+    <title>{% block title %}Parts Tracking{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     {% block additional_css %}{% endblock %}
 </head>
 <body>
-    {% include 'header.html' %}
+    <header>
+        <a href="{{ url_for('main.home') }}">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Main Menu" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.viewParts') }}">View Parts</a></li>
+                <li><a href="{{ url_for('main.addParts') }}">Add Parts</a></li>
+                <li><a href="{{ url_for('main.assignParts') }}">Assign Parts</a></li>
+                <li><a href="{{ url_for('main.stats') }}">Stats</a></li>
+                <li><a href="{{ url_for('main.QC') }}">QC</a></li>
+            </ul>
+        </nav>
+    </header>
     <main>
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>

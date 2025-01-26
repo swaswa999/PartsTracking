@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ person[1] }}'s Stats{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/person_stats.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ person[1] }}'s Stats</h1>
+    <p><strong>Mech Group:</strong> {{ person[2] }}</p>
+    <p><strong>Parts Done:</strong> {{ person[3] }}</p>
+    <h2>Parts Completed</h2>
+    <ul>
+        {% for part in completed_parts %}
+        <li>
+            <strong>{{ part[1] }}</strong> - Difficulty: {{ part[2] }}, QC Attempts: {{ part[3] }}, Machine Used: {{ part[4] }}
+        </li>
+        {% endfor %}
+    </ul>
+    <h2>Parts In Progress</h2>
+    <ul>
+        {% for part in in_progress_parts %}
+        <li>
+            <strong>{{ part[1] }}</strong> - Difficulty: {{ part[2] }}, QC Attempts: {{ part[3] }}, Machine Used: {{ part[4] }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

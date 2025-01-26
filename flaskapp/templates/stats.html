@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}People Stats{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>People Stats</h1>
+    <div class="people-grid">
+        {% for person in people %}
+        <div class="person-box">
+            <a href="{{ url_for('main.person_stats', person_id=person[0]) }}">
+                <h3>{{ person[1] }}</h3>
+                <p>{{ person[2] }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

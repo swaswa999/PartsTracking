@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import os
 from logic.robotProgress import get_robot_progress 
 from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part
+from logic.peopleDB import get_all_people, get_person_by_id, get_parts_by_person
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -50,7 +51,8 @@ def edit_part(part_id):
             'tolerance': request.form['tolerance'],
             'drawing_sheet_creator': request.form['drawing_sheet_creator'],
             'mech_type': request.form.get('mech_type', ''),
-            'progress': 'Awaiting_Stock'
+            'progress': request.form.get('progress', 'Awaiting_Approval'),
+            'qc_attempts': 0
         }
         update_part(part_id, updated_part)
         return redirect(url_for('main.assignParts'))
@@ -86,7 +88,8 @@ def addParts():
                 'assigned_machinist': request.form.get('assigned_machinist', ''),
                 'drawing_sheet_creator': request.form['drawing_sheet_creator'],
                 'mech_type': request.form.get('mech_type', ''),
-                'progress': 'Awaiting_Approval'
+                'progress': 'Awaiting_Approval',
+                'qc_attempts': 0
             }
             add_part(part)
             return redirect(url_for('main.viewParts'))
@@ -94,9 +97,22 @@ def addParts():
 
 @main.route('/stats')
 def stats():
-    return render_template('stats.html')
+    people = get_all_people()
+    return render_template('stats.html', people=people)
+
+@main.route('/personStats/<int:person_id>')
+def person_stats(person_id):
+    person = get_person_by_id(person_id)
+    parts = get_parts_by_person(person_id)
+    completed_parts = [part for part in parts if part[6] == 'Completed']
+    in_progress_parts = [part for part in parts if part[6] == 'In Progress']
+    return render_template('personStats.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
 
 @main.route('/QC')
 def QC():
     return render_template('QC.html')
+
+@main.route('/mechView')
+def mechView():
+    return render_template('mechView.html')
 
