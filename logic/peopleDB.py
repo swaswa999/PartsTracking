@@ -76,6 +76,14 @@ def get_person_by_id(person_id):
     conn.close()
     return person
 
+def get_person_by_name(name):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM people WHERE name = ?', (name,))
+    person = cursor.fetchone()
+    conn.close()
+    return person
+
 def get_parts_by_person(person_id):
     conn = create_connection()
     cursor = conn.cursor()

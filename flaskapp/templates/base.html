@@ -10,20 +10,7 @@
     {% block additional_css %}{% endblock %}
 </head>
 <body>
-    <header>
-        <a href="{{ url_for('main.home') }}">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Main Menu" class="logo">
-        </a>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('main.viewParts') }}">View Parts</a></li>
-                <li><a href="{{ url_for('main.addParts') }}">Add Parts</a></li>
-                <li><a href="{{ url_for('main.assignParts') }}">Assign Parts</a></li>
-                <li><a href="{{ url_for('main.stats') }}">Stats</a></li>
-                <li><a href="{{ url_for('main.QC') }}">QC</a></li>
-            </ul>
-        </nav>
-    </header>
+    {% include 'header.html' %}
     <main>
         {% block content %}{% endblock %}
     </main>

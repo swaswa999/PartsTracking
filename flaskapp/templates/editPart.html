@@ -8,19 +8,25 @@
 
 {% block content %}
 <div class="container">
-    <h1>Edit Part: {{ part[1] }}</h1>
-    <form method="POST" action="{{ url_for('main.edit_part', part_id=part[0]) }}">
+    <h1>Edit Part</h1>
+    <form action="{{ url_for('main.edit_part', part_id=part[0]) }}" method="post">
         <label for="description">Description:</label>
-        <textarea id="description" name="description">{{ part[3] }}</textarea><br>
+        <input type="text" id="description" name="description" value="{{ part[1] }}"><br>
 
         <label for="priority">Priority:</label>
-        <input type="number" id="priority" name="priority" value="{{ part[4] or 1 }}" max="4" min="1"><br>
+        <input type="number" id="priority" name="priority" value="{{ part[2] }}"><br>
 
         <label for="number_of_parts">Number of Parts:</label>
         <input type="number" id="number_of_parts" name="number_of_parts" value="{{ part[5] or 1 }}" min="1"><br>
 
         <label for="machine_type">Machine Type:</label>
-        <input type="text" id="machine_type" name="machine_type" value="{{ part[6] }}"><br>
+        <select id="machine_type" name="machine_type">
+            <option value="handtools" {% if part[6] == 'handtools' %}selected{% endif %}>Handtools</option>
+            <option value="lathe" {% if part[6] == 'lathe' %}selected{% endif %}>Lathe</option>
+            <option value="mill" {% if part[6] == 'mill' %}selected{% endif %}>Mill</option>
+            <option value="cnc" {% if part[6] == 'cnc' %}selected{% endif %}>CNC</option>
+            <option value="lazer cutter" {% if part[6] == 'lazer cutter' %}selected{% endif %}>Lazer Cutter</option>
+        </select><br>
 
         <label for="difficulty">Difficulty:</label>
         <input type="number" id="difficulty" name="difficulty" value="{{ part[7] }}"><br>
@@ -32,7 +38,21 @@
         <input type="text" id="drawing_sheet_creator" name="drawing_sheet_creator" value="{{ part[10] }}"><br>
 
         <label for="mech_type">Mech Type:</label>
-        <input type="text" id="mech_type" name="mech_type" value="{{ part[11] }}"><br>
+        <select id="mech_type" name="mech_type">
+            <option value="pivot" {% if part[11] == 'pivot' %}selected{% endif %}>Pivot</option>
+            <option value="differential" {% if part[11] == 'differential' %}selected{% endif %}>Differential</option>
+            <option value="elevator" {% if part[11] == 'elevator' %}selected{% endif %}>Elevator</option>
+            <option value="intake" {% if part[11] == 'intake' %}selected{% endif %}>Intake</option>
+            <option value="climb" {% if part[11] == 'climb' %}selected{% endif %}>Climb</option>
+        </select><br>
+
+        <label for="assigned_machinist">Assigned Machinist:</label>
+        <select id="assigned_machinist" name="assigned_machinist">
+            <option value="">Select a machinist</option>
+            {% for person in people %}
+            <option value="{{ person[0] }}" {% if part[12] == person[0] %}selected{% endif %}>{{ person[1] }}</option>
+            {% endfor %}
+        </select><br>
 
         <button type="submit">Update Part</button>
     </form>

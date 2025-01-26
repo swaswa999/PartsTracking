@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
 import os
 from logic.robotProgress import get_robot_progress 
 from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part
-from logic.peopleDB import get_all_people, get_person_by_id, get_parts_by_person
+from logic.peopleDB import get_all_people, get_person_by_id, get_parts_by_person, get_person_by_name
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -41,6 +41,7 @@ def assignParts():
 @main.route('/editPart/<int:part_id>', methods=['GET', 'POST'])
 def edit_part(part_id):
     part = get_part_by_id(part_id)
+    people = get_all_people()
     if request.method == 'POST':
         updated_part = {
             'description': request.form['description'],
@@ -51,12 +52,13 @@ def edit_part(part_id):
             'tolerance': request.form['tolerance'],
             'drawing_sheet_creator': request.form['drawing_sheet_creator'],
             'mech_type': request.form.get('mech_type', ''),
-            'progress': request.form.get('progress', 'Awaiting_Approval'),
-            'qc_attempts': 0
+            'progress': 'Awaiting_Stock',
+            'qc_attempts': 0,
+            'assigned_machinist': request.form.get('assigned_machinist', type=int)
         }
         update_part(part_id, updated_part)
         return redirect(url_for('main.assignParts'))
-    return render_template('editPart.html', part=part)
+    return render_template('editPart.html', part=part, people=people)
 
 @main.route('/addParts', methods=['GET', 'POST'])
 def addParts():
@@ -112,7 +114,25 @@ def person_stats(person_id):
 def QC():
     return render_template('QC.html')
 
-@main.route('/mechView')
-def mechView():
-    return render_template('mechView.html')
+@main.route('/personalPartsView/<int:person_id>')
+def personal_parts_view(person_id):
+    person = get_person_by_id(person_id)
+    parts = get_parts_by_person(person_id)
+    return render_template('personalPartsView.html', person=person, parts=parts)
+
+@main.route('/search_person')
+def search_person():
+    name = request.args.get('name')
+    person = get_person_by_name(name)
+    if person:
+        return redirect(url_for('main.personal_parts_view', person_id=person[0]))
+    else:
+        return redirect(url_for('main.stats'))
+
+@main.route('/autocomplete', methods=['GET'])
+def autocomplete():
+    search = request.args.get('q')
+    people = get_all_people()
+    results = [person[1] for person in people if search.lower() in person[1].lower()]
+    return jsonify(results)
 

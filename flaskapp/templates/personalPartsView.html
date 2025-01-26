@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ person[1] }}'s Parts{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/personalPartsView.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ person[1] }}'s Parts</h1>
+    <p><strong>Mech Group:</strong> {{ person[2] }}</p>
+    <p><strong>Parts Done:</strong> {{ person[3] }}</p>
+    <h2>Parts</h2>
+    <div class="parts-list">
+        {% for part in parts %}
+        <div class="part-box">
+            <p><strong>Part Name:</strong> {{ part[2] }}</p>
+            <p><strong>Difficulty:</strong> {{ part[3] }}</p>
+            <p><strong>QC Attempts:</strong> {{ part[4] }}</p>
+            <p><strong>Machine Used:</strong> {{ part[5] }}</p>
+            <p><strong>Status:</strong> {{ part[6] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
