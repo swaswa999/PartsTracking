@@ -1,4 +1,8 @@
 from flask import Blueprint, render_template
+from logic.robotProgress import get_robot_progress
+
+
+
 
 # Create a blueprint for main routes
 main = Blueprint('main', __name__)
@@ -9,7 +13,8 @@ def home():
 
 @main.route('/shoptime')
 def shoptime():
-    return render_template('shoptime.html')
+    progress_data = get_robot_progress()
+    return render_template('shoptime.html', progress_data=progress_data)
 
 @main.route('/viewParts')
 def viewParts():

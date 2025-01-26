@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop Time{% endblock %}
+
+{% block content %}
+<div class="progress-container">
+    <h2>ROBOT Progress {{ progress_data.robot_progress }}%</h2>
+    <div class="progress-bar">
+        <div class="progress-bar-green" style="width: {{ progress_data.robot_progress }}%;"></div>
+        <div class="progress-bar-red" style="width: {{ 100 - progress_data.robot_progress }}%;"></div>
+    </div>
+    <div class="mech-progress">
+        <div class="mech">
+            <h3>mech1 - {{ progress_data.mech1 }}%</h3>
+            <div class="mech-bar">
+                <div class="mech-bar-fill" style="width: {{ progress_data.mech1 }}%;"></div>
+            </div>
+        </div>
+        <div class="mech">
+            <h3>mech2 - {{ progress_data.mech2 }}%</h3>
+            <div class="mech-bar">
+                <div class="mech-bar-fill" style="width: {{ progress_data.mech2 }}%;"></div>
+            </div>
+        </div>
+        <div class="mech">
+            <h3>mech3 - {{ progress_data.mech3 }}%</h3>
+            <div class="mech-bar">
+                <div class="mech-bar-fill" style="width: {{ progress_data.mech3 }}%;"></div>
+            </div>
+        </div>
+        <div class="mech">
+            <h3>mech4 - {{ progress_data.mech4 }}%</h3>
+            <div class="mech-bar">
+                <div class="mech-bar-fill" style="width: {{ progress_data.mech4 }}%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
