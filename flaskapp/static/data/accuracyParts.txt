@@ -1,0 +1,42 @@
+Michi, lazer cutter, 95
+Nitzan, cnc, 90
+Caroline, drill, 85
+Ruby, handtools, 80
+Jacob, lathe, 88
+Hannah, mill, 92
+Anna, lazer cutter, 87
+Ava, cnc, 89
+Tom, drill, 84
+Meni, handtools, 83
+Satvik, lathe, 91
+Antonio, mill, 93
+Victor, lazer cutter, 94
+Jesse, cnc, 88
+Erin, drill, 86
+Stella, handtools, 82
+Brandon, lathe, 90
+Johnny, mill, 91
+Nadia, lazer cutter, 89
+Fabi, cnc, 87
+Hamza, drill, 85
+Misha, handtools, 83
+Kaavya, lathe, 92
+Lucca, mill, 90
+Tony, lazer cutter, 93
+Keiss, cnc, 89
+Alvin, drill, 87
+Justin, handtools, 85
+Ethan, lathe, 91
+Andrew, mill, 88
+Sophie, lazer cutter, 90
+Parker, cnc, 86
+David, drill, 84
+Riya, handtools, 82
+Swayam, lathe, 89
+Siyona, mill, 87
+Holden, lazer cutter, 91
+Samuel, cnc, 88
+Avanti, drill, 85
+Sangeet, handtools, 83
+Tanmay, lathe, 90
+Bani, mill, 86
