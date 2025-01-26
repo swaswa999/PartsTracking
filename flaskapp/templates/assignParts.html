@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Assign Parts{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/assignParts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Assign Parts</h1>
+    <div class="parts-grid" id="parts-grid">
+        {% for part in parts %}
+        {% if part[12] == 'Awaiting_Approval' %}
+        <div class="part-box" data-name="{{ part[1] }}" data-mech_type="{{ part[10] }}" data-progress="{{ part[11] }}" data-priority="{{ part[3] }}" data-difficulty="{{ part[6] }}" data-machine_type="{{ part[5] }}">
+            <a href="{{ url_for('main.edit_part', part_id=part[0]) }}">
+                <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" width="100%" height="150px" />
+                <h3>{{ part[1] }}</h3>
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

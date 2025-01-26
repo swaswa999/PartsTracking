@@ -12,22 +12,26 @@
     <div class="part-details">
         <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" class="pdf-viewer" />
         <p><strong>Description:</strong> {{ part[3] }}</p>
-        <p><strong>Priority:</strong> {{ part[4] }}</p>
+        <p><strong>Priority:</strong> 
+            {% for i in range(part[4] | int) %}
+            <img src="{{ url_for('static', filename='img/star.png') }}" alt="star" class="star-icon" />
+            {% endfor %}/4
+        </p>
         <p><strong>Machine Type:</strong> {{ part[6] }}</p>
         {% if part[7] %}
         <p><strong>Difficulty:</strong> 
             {% for i in range(part[7] | int) %}
             <img src="{{ url_for('static', filename='img/star.png') }}" alt="star" class="star-icon" />
-            {% endfor %}
-            ({{ part[7] }})
+            {% endfor %}/4
         </p>
         {% endif %}
+        {% if part[9] %}
         <p><strong>Assigned Machinist:</strong> {{ part[9] }}</p>
+        {% endif %}
         <p><strong>Drawing Sheet Creator:</strong> {{ part[10] }}</p>
         <p><strong>Mech Type:</strong> {{ part[11] }}</p>
         <p><strong>Progress:</strong> {{ part[12] }}</p>
         <p><strong>Tolerance:</strong> {{ part[8] }}</p>
-        <p><strong>Number of Parts:</strong> {{ part[5] }}</p>
     </div>
 </div>
 {% endblock %}

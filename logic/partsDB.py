@@ -18,7 +18,7 @@ def create_table():
             priority INTEGER,
             number_of_parts INTEGER,
             machine_type TEXT,
-            difficulty TEXT,
+            difficulty INTEGER,
             tolerance TEXT,
             assigned_machinist TEXT,
             drawing_sheet_creator TEXT,
@@ -54,6 +54,17 @@ def get_part_by_id(part_id):
     part = cursor.fetchone()
     conn.close()
     return part
+
+def update_part(part_id, updated_part):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE parts
+        SET description = ?, priority = ?, number_of_parts = ?, machine_type = ?, difficulty = ?, tolerance = ?, drawing_sheet_creator = ?, mech_type = ?, progress = ?
+        WHERE id = ?
+    ''', (updated_part['description'], updated_part['priority'], updated_part['number_of_parts'], updated_part['machine_type'], updated_part['difficulty'], updated_part['tolerance'], updated_part['drawing_sheet_creator'], updated_part['mech_type'], updated_part['progress'], part_id))
+    conn.commit()
+    conn.close()
 
 # Create the table when the module is imported
 create_table()

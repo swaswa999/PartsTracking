@@ -24,20 +24,20 @@ h1 {
     margin-top: 20px;
 }
 
-.part-details .pdf-viewer {
-    width: 100%;
-    max-width: 25cm; /* Reduced from 27.94 cm */
-    height: auto;
-    aspect-ratio: 27.94 / 21.59; /* Maintain aspect ratio */
-    border: 1px solid #333;
-    border-radius: 4px;
-}
-
 .part-details p {
     margin: 10px 0;
-    line-height: 1.6;
 }
 
-.part-details p strong {
-    color: #bb86fc;
+.pdf-viewer {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.star-icon {
+    height: 1em;
+    width: 1em;
+    vertical-align: middle;
 }

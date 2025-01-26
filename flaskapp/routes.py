@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 from logic.robotProgress import get_robot_progress 
-from logic.partsDB import add_part, get_all_parts, get_part_by_id
+from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -34,7 +34,27 @@ def view_part(part_id):
 
 @main.route('/assignParts')
 def assignParts():
-    return render_template('assignParts.html')
+    parts = get_all_parts()
+    return render_template('assignParts.html', parts=parts)
+
+@main.route('/editPart/<int:part_id>', methods=['GET', 'POST'])
+def edit_part(part_id):
+    part = get_part_by_id(part_id)
+    if request.method == 'POST':
+        updated_part = {
+            'description': request.form['description'],
+            'priority': request.form.get('priority', type=int),
+            'number_of_parts': request.form.get('number_of_parts', type=int),
+            'machine_type': request.form.get('machine_type', ''),
+            'difficulty': request.form.get('difficulty', type=int),
+            'tolerance': request.form['tolerance'],
+            'drawing_sheet_creator': request.form['drawing_sheet_creator'],
+            'mech_type': request.form.get('mech_type', ''),
+            'progress': 'Awaiting_Stock'
+        }
+        update_part(part_id, updated_part)
+        return redirect(url_for('main.assignParts'))
+    return render_template('editPart.html', part=part)
 
 @main.route('/addParts', methods=['GET', 'POST'])
 def addParts():

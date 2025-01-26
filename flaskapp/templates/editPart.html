@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Part{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editPart.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit Part: {{ part[1] }}</h1>
+    <form method="POST" action="{{ url_for('main.edit_part', part_id=part[0]) }}">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description">{{ part[3] }}</textarea><br>
+
+        <label for="priority">Priority:</label>
+        <input type="number" id="priority" name="priority" value="{{ part[4] or 1 }}" max="4" min="1"><br>
+
+        <label for="number_of_parts">Number of Parts:</label>
+        <input type="number" id="number_of_parts" name="number_of_parts" value="{{ part[5] or 1 }}" min="1"><br>
+
+        <label for="machine_type">Machine Type:</label>
+        <input type="text" id="machine_type" name="machine_type" value="{{ part[6] }}"><br>
+
+        <label for="difficulty">Difficulty:</label>
+        <input type="number" id="difficulty" name="difficulty" value="{{ part[7] }}"><br>
+
+        <label for="tolerance">Tolerance:</label>
+        <input type="text" id="tolerance" name="tolerance" value="{{ part[8] }}"><br>
+
+        <label for="drawing_sheet_creator">Drawing Sheet Creator:</label>
+        <input type="text" id="drawing_sheet_creator" name="drawing_sheet_creator" value="{{ part[10] }}"><br>
+
+        <label for="mech_type">Mech Type:</label>
+        <input type="text" id="mech_type" name="mech_type" value="{{ part[11] }}"><br>
+
+        <button type="submit">Update Part</button>
+    </form>
+</div>
+{% endblock %}
