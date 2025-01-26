@@ -9,6 +9,59 @@
 {% block content %}
 <div class="container">
     <h1>{{ person[1] }}'s Stats</h1>
+
+        <p><strong>Mech Group:</strong> Climb & Controls</p>
+        <p><strong>QC rating:</strong> Climb & Controls</p>
+        <p><strong>Parts Done:</strong> Name: Standoff      Difficulty: 3/4      QC: 2</p>
+        <canvas id="partsChart" width="400" height="400"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            var ctx = document.getElementById('partsChart').getContext('2d');
+            var partsChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Lathe', 'Handtools', 'Mill', 'LaserCutter'],
+                    datasets: [{
+                        label: 'Parts Distribution',
+                        data: [10, 20, 30, 40], // Example data, replace with actual values
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+
+
+    <!-- {% else %}
+        <p><strong>Mech Group:</strong> {{ person[2] }}</p>
+        <p><strong>Parts Done:</strong> {{ person[3] }}</p>
+    
     <p><strong>Mech Group:</strong> {{ person[2] }}</p>
     <p><strong>Parts Done:</strong> {{ person[3] }}</p>
     <h2>Parts Completed</h2>
@@ -27,5 +80,6 @@
         </li>
         {% endfor %}
     </ul>
+    {% endif %} -->
 </div>
 {% endblock %}

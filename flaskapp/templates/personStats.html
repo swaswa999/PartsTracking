@@ -9,23 +9,115 @@
 {% block content %}
 <div class="container">
     <h1>{{ person[1] }}'s Stats</h1>
-    <p><strong>Mech Group:</strong> {{ person[2] }}</p>
-    <p><strong>Parts Done:</strong> {{ person[3] }}</p>
-    <h2>Parts Completed</h2>
-    <ul>
-        {% for part in completed_parts %}
-        <li>
-            <strong>{{ part[1] }}</strong> - Difficulty: {{ part[2] }}, QC Attempts: {{ part[3] }}, Machine Used: {{ part[4] }}
-        </li>
-        {% endfor %}
-    </ul>
-    <h2>Parts In Progress</h2>
-    <ul>
-        {% for part in in_progress_parts %}
-        <li>
-            <strong>{{ part[1] }}</strong> - Difficulty: {{ part[2] }}, QC Attempts: {{ part[3] }}, Machine Used: {{ part[4] }}
-        </li>
-        {% endfor %}
-    </ul>
+
+    <p><strong>Mech Group:</strong> Climb & Controls</p>
+    <p><strong>QC rating:</strong> Climb & Controls</p>
+    <table class="table" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ccc; padding: 8px;">Part Name</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Difficulty</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">QC</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Standoff</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Easy</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">0</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Motor</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Medium</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Servo</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Medium</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">0</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Gear</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Hard</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Bracket</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Easy</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">0</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Wheel</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Medium</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Axle</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Hard</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Pulley</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Easy</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">0</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Bearing</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Medium</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">0</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">Sensor</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Hard</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <canvas id="partsChart" width="100" height="100"></canvas>
+    <canvas id="myChart" width="150" height="150"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('partsChart').getContext('2d');
+        var partsChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Lathe', 'Handtools', 'Mill', 'LaserCutter'],
+                datasets: [{
+                    label: 'Parts Distribution',
+                    data: [10, 20, 30, 40], // Example data, replace with actual values
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
 </div>
 {% endblock %}

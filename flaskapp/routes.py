@@ -195,3 +195,26 @@ def autocomplete():
     results = [person[1] for person in people if search.lower() in person[1].lower()]
     return jsonify(results)
 
+@main.route('/updateStatus/<int:part_id>', methods=['POST'])
+def update_status(part_id):
+    existing = get_part_by_id(part_id)
+    new_status = request.form.get('progress', existing[12])
+
+    updated = {
+        'name': existing[1],
+        'photo': existing[2],
+        'description': existing[3],
+        'priority': existing[4],
+        'number_of_parts': existing[5],
+        'machine_type': existing[6],
+        'difficulty': existing[7],
+        'tolerance': existing[8],
+        'assigned_machinist': existing[9],
+        'drawing_sheet_creator': existing[10],
+        'mech_type': existing[11],
+        'progress': new_status,
+        'qc_attempts': existing[13]
+    }
+    update_part(part_id, updated)
+    return redirect(url_for('main.view_part', part_id=part_id))
+
