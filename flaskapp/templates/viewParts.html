@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}View Parts{% endblock %}
+
+{% block content %}
+<h2>Parts List</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Photo</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Number of Parts</th>
+        <th>Machine Type</th>
+        <th>Difficulty</th>
+        <th>Tolerance</th>
+        <th>Assigned Machinist</th>
+        <th>Drawing Sheet Creator</th>
+        <th>Mech Type</th>
+        <th>Progress</th>
+    </tr>
+    {% for part in parts %}
+    <tr>
+        <td>{{ part[1] }}</td>
+        <td><img src="{{ url_for('static', filename='data/partsPhoto/' ~ part[1] ~ '.jpg') }}" alt="{{ part[1] }}" width="100"></td>
+        <td>{{ part[2] }}</td>
+        <td>{{ part[3] }}</td>
+        <td>{{ part[4] }}</td>
+        <td>{{ part[5] }}</td>
+        <td>{{ part[6] }}</td>
+        <td>{{ part[7] }}</td>
+        <td>{{ part[8] }}</td>
+        <td>{{ part[9] }}</td>
+        <td>{{ part[10] }}</td>
+        <td>{{ part[11] }}%</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
