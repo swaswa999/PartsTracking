@@ -1,14 +1,14 @@
+import os
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
-import os
 from logic.robotProgress import get_robot_progress
+import random
 from logic.partsDB import (
     add_part, get_all_parts, get_part_by_id, update_part,
     get_parts_by_person, get_parts_by_status
 )
 from logic.peopleDB import (
-    get_all_people, get_person_by_id, get_parts_by_person,
-    get_person_by_name
+    get_all_people, get_person_by_id, get_person_by_name
 )
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
@@ -16,6 +16,23 @@ ALLOWED_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def read_accuracy_parts():
+    accuracy_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'accuracyParts.txt')
+    recommendations = {}
+    if os.path.exists(accuracy_file):
+        with open(accuracy_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split(',')
+                if len(parts) < 2:
+                    continue
+                machine_type = parts[0].strip().lower()
+                machinist = parts[1].strip()
+                recommendations.setdefault(machine_type, []).append(machinist)
+    return recommendations
 
 main = Blueprint('main', __name__)
 
@@ -35,9 +52,21 @@ def assignParts():
 
 @main.route('/editPart/<int:part_id>', methods=['GET', 'POST'])
 def edit_part(part_id):
+    names = [
+        "Michi", "Nitzan", "Caroline", "Ruby", "Jacob", "Hannah", "Anna", 
+        "Ava", "Tom", "Meni", "Satvik", "Antonio", "Victor", "Jesse", 
+        "Erin", "Stella", "Brandon", "Johnny", "Nadia", "Fabi", "Hamza", 
+        "Misha", "Kaavya", "Lucca", "Tony", "Keiss", "Alvin", "Justin", 
+        "Ethan", "Andrew", "Sophie", "Parker", "David", "Riya", "Swayam", 
+        "Siyona", "Holden", "Samuel", "Avanti", "Sangeet", "Tanmay", "Bani"
+    ]
+
     part = get_part_by_id(part_id)
     people = get_all_people()
+
     if request.method == 'POST':
+        assigned_machinist = random.choice(names)
+
         updated_part = {
             'name': request.form['name'],
             'photo': part[2],
@@ -47,14 +76,15 @@ def edit_part(part_id):
             'machine_type': request.form.get('machine_type', ''),
             'difficulty': request.form.get('difficulty', type=int),
             'tolerance': request.form['tolerance'],
-            'assigned_machinist': request.form.get('assigned_machinist', ''),
+            'assigned_machinist': assigned_machinist,
             'drawing_sheet_creator': request.form['drawing_sheet_creator'],
             'mech_type': request.form.get('mech_type', ''),
-            'progress': "Awaiting_Machining",
+            'progress': request.form.get('progress', 'Awaiting_Approval'),
             'qc_attempts': request.form.get('qc_attempts', type=int) or part[13]
         }
         update_part(part_id, updated_part)
         return redirect(url_for('main.assignParts'))
+
     return render_template('editPart.html', part=part, people=people)
 
 @main.route('/addParts', methods=['GET', 'POST'])

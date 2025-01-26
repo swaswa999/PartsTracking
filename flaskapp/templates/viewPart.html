@@ -30,7 +30,9 @@
         {% endif %}
         <p><strong>Drawing Sheet Creator:</strong> {{ part[10] }}</p>
         <p><strong>Mech Type:</strong> {{ part[11] }}</p>
-        <form action="{{ url_for('main.update_status', part_id=part[0]) }}" method="post">
+        
+        <!-- Status update form -->
+        <form action="{{ url_for('main.update_status', part_id=part[0]) }}" method="post" class="status-form">
             <label for="progress"><strong>Status:</strong></label>
             <select name="progress" id="progress">
                 <option value="Awaiting_Approval" {% if part[12] == 'Awaiting_Approval' %}selected{% endif %}>Awaiting Approval</option>
@@ -41,7 +43,6 @@
             </select>
             <button type="submit">Update Status</button>
         </form>
-        <p><strong>Tolerance:</strong> {{ part[8] }}</p>
     </div>
 </div>
 {% endblock %}

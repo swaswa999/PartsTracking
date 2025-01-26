@@ -8,11 +8,9 @@
 
 {% block content %}
 <div class="container">
-    <h1>Approve Part</h1>
-    <embed src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}"
-           type="application/pdf"
-           class="pdf-viewer" />
-    <form action="{{ url_for('main.edit_part', part_id=part[0]) }}" method="post">
+    <h1>Edit Part</h1>
+    <embed src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}" type="application/pdf" class="pdf-viewer" />
+    <form id="editPartForm" action="{{ url_for('main.edit_part', part_id=part[0]) }}" method="post">
         <label for="name">Part Name:</label>
         <input type="text" id="name" name="name" value="{{ part[1] }}" required><br>
 
@@ -26,7 +24,7 @@
         <input type="number" id="number_of_parts" name="number_of_parts" value="{{ part[5] or 1 }}" min="1"><br>
 
         <label for="machine_type">Machine Type:</label>
-        <select id="machine_type" name="machine_type">
+        <select id="machine_type" name="machine_type" required>
             <option value="handtools" {% if part[6] == 'handtools' %}selected{% endif %}>Handtools</option>
             <option value="lathe" {% if part[6] == 'lathe' %}selected{% endif %}>Lathe</option>
             <option value="mill" {% if part[6] == 'mill' %}selected{% endif %}>Mill</option>
@@ -56,13 +54,13 @@
         <label for="drawing_sheet_creator">Drawing Sheet Creator:</label>
         <input type="text" id="drawing_sheet_creator" name="drawing_sheet_creator" value="{{ part[10] }}"><br>
 
-        <label for="assigned_machinist">Assigned Machinist:</label>
+        <!-- <label for="assigned_machinist">Assigned Machinist:</label>
         <select id="assigned_machinist" name="assigned_machinist">
             <option value="">Select a machinist</option>
             {% for p in people %}
             <option value="{{ p[1] }}" {% if part[9] == p[1] %}selected{% endif %}>{{ p[1] }}</option>
             {% endfor %}
-        </select><br>
+        </select><br> -->
 
         <button type="submit">Update Part</button>
     </form>
