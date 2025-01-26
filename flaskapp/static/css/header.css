@@ -14,6 +14,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 .logo {
@@ -27,6 +28,7 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 nav ul li {
@@ -47,6 +49,8 @@ nav ul li a:hover {
     position: relative;
     display: flex;
     align-items: center;
+    max-width: 400px; /* Set a maximum width */
+    margin-left: auto; /* Move the search container to the right */
 }
 
 .search-container input[type="text"] {
@@ -56,6 +60,7 @@ nav ul li a:hover {
     border: 1px solid #444;
     color: #e0e0e0;
     border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
+    flex-grow: 1; /* Allow the input to grow */
 }
 
 .search-container button {

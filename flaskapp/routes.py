@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from werkzeug.utils import secure_filename
 import os
 from logic.robotProgress import get_robot_progress 
-from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part
+from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part, get_parts_by_person, get_parts_by_status
 from logic.peopleDB import get_all_people, get_person_by_id, get_parts_by_person, get_person_by_name
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
@@ -23,16 +23,6 @@ def shoptime():
     progress_data = get_robot_progress()
     return render_template('shoptime.html', progress_data=progress_data)
 
-@main.route('/viewParts')
-def viewParts():
-    parts = get_all_parts()
-    return render_template('viewParts.html', parts=parts)
-
-@main.route('/viewPart/<int:part_id>')
-def view_part(part_id):
-    part = get_part_by_id(part_id)
-    return render_template('viewPart.html', part=part)
-
 @main.route('/assignParts')
 def assignParts():
     parts = get_all_parts()
@@ -44,17 +34,19 @@ def edit_part(part_id):
     people = get_all_people()
     if request.method == 'POST':
         updated_part = {
+            'name': request.form['name'],
+            'photo': part[2],
             'description': request.form['description'],
             'priority': request.form.get('priority', type=int),
             'number_of_parts': request.form.get('number_of_parts', type=int),
             'machine_type': request.form.get('machine_type', ''),
             'difficulty': request.form.get('difficulty', type=int),
             'tolerance': request.form['tolerance'],
+            'assigned_machinist': request.form.get('assigned_machinist', ''),
             'drawing_sheet_creator': request.form['drawing_sheet_creator'],
             'mech_type': request.form.get('mech_type', ''),
-            'progress': 'Awaiting_Stock',
-            'qc_attempts': 0,
-            'assigned_machinist': request.form.get('assigned_machinist', type=int)
+            'progress': request.form.get('progress', 'Awaiting_Approval'),
+            'qc_attempts': request.form.get('qc_attempts', type=int)
         }
         update_part(part_id, updated_part)
         return redirect(url_for('main.assignParts'))
@@ -97,6 +89,16 @@ def addParts():
             return redirect(url_for('main.viewParts'))
     return render_template('addParts.html')
 
+@main.route('/viewParts')
+def viewParts():
+    parts = get_all_parts()
+    return render_template('viewParts.html', parts=parts)
+
+@main.route('/viewPart/<int:part_id>')
+def view_part(part_id):
+    part = get_part_by_id(part_id)
+    return render_template('viewPart.html', part=part)
+
 @main.route('/stats')
 def stats():
     people = get_all_people()
@@ -112,20 +114,41 @@ def person_stats(person_id):
 
 @main.route('/QC')
 def QC():
-    return render_template('QC.html')
+    parts = get_parts_by_status('Awaiting_QC')
+    return render_template('QC.html', parts=parts)
+
+@main.route('/approve_qc/<int:part_id>', methods=['POST'])
+def approve_qc(part_id):
+    part = get_part_by_id(part_id)
+    part['progress'] = 'Completed'
+    update_part(part_id, part)
+    return redirect(url_for('main.QC'))
+
+@main.route('/reject_qc/<int:part_id>', methods=['POST'])
+def reject_qc(part_id):
+    part = get_part_by_id(part_id)
+    part['qc_attempts'] += 1
+    part['progress'] = 'Awaiting_Machining'
+    update_part(part_id, part)
+    return redirect(url_for('main.QC'))
 
 @main.route('/personalPartsView/<int:person_id>')
 def personal_parts_view(person_id):
     person = get_person_by_id(person_id)
     parts = get_parts_by_person(person_id)
-    return render_template('personalPartsView.html', person=person, parts=parts)
+    completed_parts = [part for part in parts if part[6] == 'Completed']
+    in_progress_parts = [part for part in parts if part[6] == 'In Progress']
+    return render_template('personalPartsView.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
 
 @main.route('/search_person')
 def search_person():
     name = request.args.get('name')
     person = get_person_by_name(name)
     if person:
-        return redirect(url_for('main.personal_parts_view', person_id=person[0]))
+        parts = get_parts_by_person(person[0])
+        completed_parts = [part for part in parts if part[6] == 'Completed']
+        in_progress_parts = [part for part in parts if part[6] == 'In Progress']
+        return render_template('personalPartsView.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
     else:
         return redirect(url_for('main.stats'))
 

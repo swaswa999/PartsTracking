@@ -6,14 +6,14 @@ def create_connection():
     conn = sqlite3.connect(db_path)
     return conn
 
-def create_table():
+def create_tables():
     conn = create_connection()
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS parts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            photo TEXT NOT NULL,
+            photo TEXT,
             description TEXT,
             priority INTEGER,
             number_of_parts INTEGER,
@@ -61,11 +61,27 @@ def update_part(part_id, updated_part):
     cursor = conn.cursor()
     cursor.execute('''
         UPDATE parts
-        SET description = ?, priority = ?, number_of_parts = ?, machine_type = ?, difficulty = ?, tolerance = ?, drawing_sheet_creator = ?, mech_type = ?, progress = ?, qc_attempts = ?
+        SET name = ?, photo = ?, description = ?, priority = ?, number_of_parts = ?, machine_type = ?, difficulty = ?, tolerance = ?, assigned_machinist = ?, drawing_sheet_creator = ?, mech_type = ?, progress = ?, qc_attempts = ?
         WHERE id = ?
-    ''', (updated_part['description'], updated_part['priority'], updated_part['number_of_parts'], updated_part['machine_type'], updated_part['difficulty'], updated_part['tolerance'], updated_part['drawing_sheet_creator'], updated_part['mech_type'], updated_part['progress'], updated_part['qc_attempts'], part_id))
+    ''', (updated_part['name'], updated_part['photo'], updated_part['description'], updated_part['priority'], updated_part['number_of_parts'], updated_part['machine_type'], updated_part['difficulty'], updated_part['tolerance'], updated_part['assigned_machinist'], updated_part['drawing_sheet_creator'], updated_part['mech_type'], updated_part['progress'], updated_part['qc_attempts'], part_id))
     conn.commit()
     conn.close()
 
+def get_parts_by_person(person_name):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM parts WHERE assigned_machinist = ?', (person_name,))
+    parts = cursor.fetchall()
+    conn.close()
+    return parts
+
+def get_parts_by_status(status):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM parts WHERE progress = ?', (status,))
+    parts = cursor.fetchall()
+    conn.close()
+    return parts
+
 # Create the table when the module is imported
-create_table()
+create_tables()
