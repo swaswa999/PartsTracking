@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
-from logic.robotProgress import get_robot_progress
+from logic.robotProgress import get_robot_progress 
+from logic.partsDB import add_part, get_all_parts
 
 
 
@@ -18,7 +19,8 @@ def shoptime():
 
 @main.route('/viewParts')
 def viewParts():
-    return render_template('viewParts.html')
+    parts = get_all_parts()
+    return render_template('viewParts.html', parts=parts)
 
 @main.route('/assignParts')
 def assignParts():
