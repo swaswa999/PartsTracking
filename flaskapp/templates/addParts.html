@@ -2,13 +2,17 @@
 
 {% block title %}Add Part{% endblock %}
 
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/addParts.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>Add Part</h1>
-    <form method="POST" action="{{ url_for('main.addParts') }}" enctype="multipart/form-data" autocomplete="off">
+    <form method="POST" action="{{ url_for('main.addParts') }}" enctype="multipart/form-data">
 
-        <label for="name">Part Name:</label>
-        <input type="text" id="name" name="name" required><br>
+        <label for="name">Part Name (one word):</label>
+        <input type="text" id="name" name="name" required maxlength="50" style="text-transform:uppercase;"><br>
 
         <label for="description">Description:</label>
         <textarea id="description" name="description"></textarea><br>
@@ -17,18 +21,18 @@
         <input type="number" id="number_of_parts" name="number_of_parts"><br>
 
         <label for="tolerance">Tolerance:</label>
-        <select id="tolerance" name="tolerance">
-            <option value="1">1</option>
-            <option value="0.1">0.1</option>
-            <option value="0.01">0.01</option>
-            <option value="0.001">0.001</option>
+        <select id="tolerance" name="tolerance"> 
+            <option value="0.025">0.025</option>
+            <option value="0.010">0.01</option>
+            <option value="0.005">0.005</option>
+       
         </select><br>
 
         <label for="photo">Drawing Sheet PDF:</label>
         <input type="file" id="photo" name="photo" accept="application/pdf" required><br>
 
         <label for="drawing_sheet_creator">Drawing Sheet Creator:</label>
-        <input type="text" id="drawing_sheet_creator" name="drawing_sheet_creator"><br>
+        <input type="text" id="drawing_sheet_creator" name="drawing_sheet_creator" style="text-transform:uppercase;"><br>
 
         <button type="submit">Add Part</button>
     </form>

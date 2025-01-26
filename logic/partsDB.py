@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 def create_connection():
-    db_path = os.path.join(os.path.dirname(__file__), '../../data/parts.db')
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'parts.db')
     conn = sqlite3.connect(db_path)
     return conn
 
@@ -23,7 +23,7 @@ def create_table():
             assigned_machinist TEXT,
             drawing_sheet_creator TEXT,
             mech_type TEXT,
-            progress INTEGER
+            progress TEXT DEFAULT 'Awaiting_Approval'
         )
     ''')
     conn.commit()
@@ -46,6 +46,14 @@ def get_all_parts():
     parts = cursor.fetchall()
     conn.close()
     return parts
+
+def get_part_by_id(part_id):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM parts WHERE id = ?', (part_id,))
+    part = cursor.fetchone()
+    conn.close()
+    return part
 
 # Create the table when the module is imported
 create_table()

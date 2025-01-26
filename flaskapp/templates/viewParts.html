@@ -2,38 +2,54 @@
 
 {% block title %}View Parts{% endblock %}
 
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/viewParts.css') }}">
+{% endblock %}
+
 {% block content %}
-<h2>Parts List</h2>
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Photo</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th>Number of Parts</th>
-        <th>Machine Type</th>
-        <th>Difficulty</th>
-        <th>Tolerance</th>
-        <th>Assigned Machinist</th>
-        <th>Drawing Sheet Creator</th>
-        <th>Mech Type</th>
-        <th>Progress</th>
-    </tr>
-    {% for part in parts %}
-    <tr>
-        <td>{{ part[1] }}</td>
-        <td><img src="{{ url_for('static', filename='data/partsPhoto/' ~ part[1] ~ '.jpg') }}" alt="{{ part[1] }}" width="100"></td>
-        <td>{{ part[2] }}</td>
-        <td>{{ part[3] }}</td>
-        <td>{{ part[4] }}</td>
-        <td>{{ part[5] }}</td>
-        <td>{{ part[6] }}</td>
-        <td>{{ part[7] }}</td>
-        <td>{{ part[8] }}</td>
-        <td>{{ part[9] }}</td>
-        <td>{{ part[10] }}</td>
-        <td>{{ part[11] }}%</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="container">
+    <h1>Parts List</h1>
+    <div class="sort-options">
+        <label for="sort-by">Sort by:</label>
+        <select id="sort-by" onchange="sortParts()">
+            <option value="name">Name</option>
+            <option value="mech_type">Mech Type</option>
+            <option value="progress">Progress</option>
+            <option value="priority">Priority</option>
+            <option value="difficulty">Difficulty</option>
+            <option value="machine_type">Machine Type</option>
+        </select>
+    </div>
+    <div class="parts-grid" id="parts-grid">
+        {% for part in parts %}
+        <div class="part-box" data-name="{{ part[1] }}" data-mech_type="{{ part[10] }}" data-progress="{{ part[11] }}" data-priority="{{ part[3] }}" data-difficulty="{{ part[6] }}" data-machine_type="{{ part[5] }}">
+            <a href="{{ url_for('main.view_part', part_id=part[0]) }}">
+                <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" width="100%" height="150px" />
+                <h3>{{ part[1] }}</h3>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function sortParts() {
+    const sortBy = document.getElementById('sort-by').value;
+    const partsGrid = document.getElementById('parts-grid');
+    const parts = Array.from(partsGrid.getElementsByClassName('part-box'));
+
+    parts.sort((a, b) => {
+        const aValue = a.getAttribute(`data-${sortBy}`).toLowerCase();
+        const bValue = b.getAttribute(`data-${sortBy}`).toLowerCase();
+
+        if (aValue < bValue) return -1;
+        if (aValue > bValue) return 1;
+        return 0;
+    });
+
+    parts.forEach(part => partsGrid.appendChild(part));
+}
+</script>
 {% endblock %}

@@ -2,6 +2,10 @@
 
 {% block title %}Shop Time{% endblock %}
 
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/shoptime.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="progress-container">
     <h2>ROBOT Progress {{ progress_data.robot_progress }}%</h2>

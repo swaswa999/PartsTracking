@@ -7,9 +7,7 @@
     <title>{% block title %}Flask App{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/shoptime.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/addParts.css') }}">
+    {% block additional_css %}{% endblock %}
 </head>
 <body>
     {% include 'header.html' %}

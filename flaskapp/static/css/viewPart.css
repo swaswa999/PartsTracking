@@ -1,0 +1,43 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #bb86fc;
+}
+
+.part-details {
+    margin-top: 20px;
+}
+
+.part-details .pdf-viewer {
+    width: 100%;
+    max-width: 25cm; /* Reduced from 27.94 cm */
+    height: auto;
+    aspect-ratio: 27.94 / 21.59; /* Maintain aspect ratio */
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.part-details p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.part-details p strong {
+    color: #bb86fc;
+}

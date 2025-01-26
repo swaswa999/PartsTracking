@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 from logic.robotProgress import get_robot_progress 
-from logic.partsDB import add_part, get_all_parts
+from logic.partsDB import add_part, get_all_parts, get_part_by_id
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../../data/partsPhoto')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
 ALLOWED_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
@@ -27,6 +27,11 @@ def viewParts():
     parts = get_all_parts()
     return render_template('viewParts.html', parts=parts)
 
+@main.route('/viewPart/<int:part_id>')
+def view_part(part_id):
+    part = get_part_by_id(part_id)
+    return render_template('viewPart.html', part=part)
+
 @main.route('/assignParts')
 def assignParts():
     return render_template('assignParts.html')
@@ -40,11 +45,18 @@ def addParts():
         if file.filename == '':
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            part_name = request.form['name'].replace(' ', '_').upper()
+            filename = secure_filename(f"{part_name}.pdf")
+            
+            # Ensure the upload folder exists
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+                
             file.save(os.path.join(UPLOAD_FOLDER, filename))
+            photo_path = os.path.join('static/partsStudio', filename)
             part = {
-                'name': request.form['name'],
-                'photo': filename,
+                'name': part_name,
+                'photo': photo_path,
                 'description': request.form['description'],
                 'priority': request.form.get('priority', type=int),
                 'number_of_parts': request.form.get('number_of_parts', type=int),
@@ -54,10 +66,10 @@ def addParts():
                 'assigned_machinist': request.form.get('assigned_machinist', ''),
                 'drawing_sheet_creator': request.form['drawing_sheet_creator'],
                 'mech_type': request.form.get('mech_type', ''),
-                'progress': request.form.get('progress', type=int)
+                'progress': 'Awaiting_Approval'
             }
             add_part(part)
-            return redirect(url_for('viewParts'))
+            return redirect(url_for('main.viewParts'))
     return render_template('addParts.html')
 
 @main.route('/stats')
