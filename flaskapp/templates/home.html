@@ -1,0 +1,29 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{ url_for('main.shoptime') }}" class="btn btn-primary btn-block">Shop Time</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('main.viewParts') }}" class="btn btn-primary btn-block">View Parts</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('main.assignParts') }}" class="btn btn-primary btn-block">Assign Parts</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('main.addParts') }}" class="btn btn-primary btn-block">Add Parts</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('main.stats') }}" class="btn btn-primary btn-block">Stats</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('main.QC') }}" class="btn btn-primary btn-block">QC</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
