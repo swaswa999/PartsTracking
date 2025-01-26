@@ -9,7 +9,9 @@
 {% block content %}
 <div class="container">
     <h1>Approve Part</h1>
-    <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" class="pdf-viewer" />
+    <embed src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}"
+           type="application/pdf"
+           class="pdf-viewer" />
     <form action="{{ url_for('main.edit_part', part_id=part[0]) }}" method="post">
         <label for="name">Part Name:</label>
         <input type="text" id="name" name="name" value="{{ part[1] }}" required><br>
@@ -35,12 +37,12 @@
         <label for="difficulty">Difficulty:</label>
         <input type="number" id="difficulty" name="difficulty" value="{{ part[7] }}"><br>
 
-    <label for="tolerance">Tolerance:</label>
-    <select id="tolerance" name="tolerance"> 
-        <option value="0.025" {% if part[8] == '0.025' %}selected{% endif %}>0.025</option>
-        <option value="0.010" {% if part[8] == '0.010' %}selected{% endif %}>0.01</option>
-        <option value="0.005" {% if part[8] == '0.005' %}selected{% endif %}>0.005</option>
-    </select><br>
+        <label for="tolerance">Tolerance:</label>
+        <select id="tolerance" name="tolerance">
+            <option value="0.025" {% if part[8] == '0.025' %}selected{% endif %}>0.025</option>
+            <option value="0.010" {% if part[8] == '0.010' %}selected{% endif %}>0.01</option>
+            <option value="0.005" {% if part[8] == '0.005' %}selected{% endif %}>0.005</option>
+        </select><br>
 
         <label for="mech_type">Mech Type:</label>
         <select id="mech_type" name="mech_type">
@@ -57,8 +59,8 @@
         <label for="assigned_machinist">Assigned Machinist:</label>
         <select id="assigned_machinist" name="assigned_machinist">
             <option value="">Select a machinist</option>
-            {% for person in people %}
-            <option value="{{ person[1] }}" {% if part[9] == person[1] %}selected{% endif %}>{{ person[1] }}</option>
+            {% for p in people %}
+            <option value="{{ p[1] }}" {% if part[9] == p[1] %}selected{% endif %}>{{ p[1] }}</option>
             {% endfor %}
         </select><br>
 

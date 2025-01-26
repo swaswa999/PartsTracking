@@ -34,9 +34,18 @@ def add_part(part):
     conn = create_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO parts (name, photo, description, priority, number_of_parts, machine_type, difficulty, tolerance, assigned_machinist, drawing_sheet_creator, mech_type, progress, qc_attempts)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (part['name'], part['photo'], part['description'], part['priority'], part['number_of_parts'], part['machine_type'], part['difficulty'], part['tolerance'], part['assigned_machinist'], part['drawing_sheet_creator'], part['mech_type'], part['progress'], part['qc_attempts']))
+        INSERT INTO parts (
+            name, photo, description, priority, number_of_parts, machine_type,
+            difficulty, tolerance, assigned_machinist, drawing_sheet_creator,
+            mech_type, progress, qc_attempts
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        part['name'], part['photo'], part['description'], part['priority'],
+        part['number_of_parts'], part['machine_type'], part['difficulty'],
+        part['tolerance'], part['assigned_machinist'],
+        part['drawing_sheet_creator'], part['mech_type'], part['progress'],
+        part['qc_attempts']
+    ))
     conn.commit()
     conn.close()
 
@@ -61,9 +70,29 @@ def update_part(part_id, updated_part):
     cursor = conn.cursor()
     cursor.execute('''
         UPDATE parts
-        SET name = ?, photo = ?, description = ?, priority = ?, number_of_parts = ?, machine_type = ?, difficulty = ?, tolerance = ?, assigned_machinist = ?, drawing_sheet_creator = ?, mech_type = ?, progress = ?, qc_attempts = ?
+        SET
+            name = ?,
+            photo = ?,
+            description = ?,
+            priority = ?,
+            number_of_parts = ?,
+            machine_type = ?,
+            difficulty = ?,
+            tolerance = ?,
+            assigned_machinist = ?,
+            drawing_sheet_creator = ?,
+            mech_type = ?,
+            progress = ?,
+            qc_attempts = ?
         WHERE id = ?
-    ''', (updated_part['name'], updated_part['photo'], updated_part['description'], updated_part['priority'], updated_part['number_of_parts'], updated_part['machine_type'], updated_part['difficulty'], updated_part['tolerance'], updated_part['assigned_machinist'], updated_part['drawing_sheet_creator'], updated_part['mech_type'], updated_part['progress'], updated_part['qc_attempts'], part_id))
+    ''', (
+        updated_part['name'], updated_part['photo'], updated_part['description'],
+        updated_part['priority'], updated_part['number_of_parts'],
+        updated_part['machine_type'], updated_part['difficulty'],
+        updated_part['tolerance'], updated_part['assigned_machinist'],
+        updated_part['drawing_sheet_creator'], updated_part['mech_type'],
+        updated_part['progress'], updated_part['qc_attempts'], part_id
+    ))
     conn.commit()
     conn.close()
 

@@ -1,9 +1,15 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
 import os
-from logic.robotProgress import get_robot_progress 
-from logic.partsDB import add_part, get_all_parts, get_part_by_id, update_part, get_parts_by_person, get_parts_by_status
-from logic.peopleDB import get_all_people, get_person_by_id, get_parts_by_person, get_person_by_name
+from logic.robotProgress import get_robot_progress
+from logic.partsDB import (
+    add_part, get_all_parts, get_part_by_id, update_part,
+    get_parts_by_person, get_parts_by_status
+)
+from logic.peopleDB import (
+    get_all_people, get_person_by_id, get_parts_by_person,
+    get_person_by_name
+)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/partsStudio')
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -11,7 +17,6 @@ ALLOWED_EXTENSIONS = {'pdf'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Create a blueprint for main routes
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -45,8 +50,8 @@ def edit_part(part_id):
             'assigned_machinist': request.form.get('assigned_machinist', ''),
             'drawing_sheet_creator': request.form['drawing_sheet_creator'],
             'mech_type': request.form.get('mech_type', ''),
-            'progress': request.form.get('progress', 'Awaiting_Approval'),
-            'qc_attempts': request.form.get('qc_attempts', type=int)
+            'progress': "Awaiting_Machining",
+            'qc_attempts': request.form.get('qc_attempts', type=int) or part[13]
         }
         update_part(part_id, updated_part)
         return redirect(url_for('main.assignParts'))
@@ -55,7 +60,7 @@ def edit_part(part_id):
 @main.route('/addParts', methods=['GET', 'POST'])
 def addParts():
     if request.method == 'POST':
-        if 'photo' not in request.files:
+        if 'photo' not in request.files or not request.files['photo']:
             return redirect(request.url)
         file = request.files['photo']
         if file.filename == '':
@@ -63,11 +68,8 @@ def addParts():
         if file and allowed_file(file.filename):
             part_name = request.form['name'].replace(' ', '_').upper()
             filename = secure_filename(f"{part_name}.pdf")
-            
-            # Ensure the upload folder exists
             if not os.path.exists(UPLOAD_FOLDER):
                 os.makedirs(UPLOAD_FOLDER)
-                
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             photo_path = os.path.join('static/partsStudio', filename)
             part = {
@@ -108,9 +110,11 @@ def stats():
 def person_stats(person_id):
     person = get_person_by_id(person_id)
     parts = get_parts_by_person(person_id)
-    completed_parts = [part for part in parts if part[6] == 'Completed']
-    in_progress_parts = [part for part in parts if part[6] == 'In Progress']
-    return render_template('personStats.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
+    completed_parts = [p for p in parts if p[12] == 'Completed']
+    in_progress_parts = [p for p in parts if p[12] == 'In Progress']
+    return render_template('personStats.html', person=person,
+                           completed_parts=completed_parts,
+                           in_progress_parts=in_progress_parts)
 
 @main.route('/QC')
 def QC():
@@ -119,26 +123,57 @@ def QC():
 
 @main.route('/approve_qc/<int:part_id>', methods=['POST'])
 def approve_qc(part_id):
-    part = get_part_by_id(part_id)
-    part['progress'] = 'Completed'
-    update_part(part_id, part)
+    existing = get_part_by_id(part_id)
+    updated = {
+        'name': existing[1],
+        'photo': existing[2],
+        'description': existing[3],
+        'priority': existing[4],
+        'number_of_parts': existing[5],
+        'machine_type': existing[6],
+        'difficulty': existing[7],
+        'tolerance': existing[8],
+        'assigned_machinist': existing[9],
+        'drawing_sheet_creator': existing[10],
+        'mech_type': existing[11],
+        'progress': 'Completed',
+        'qc_attempts': existing[13]
+    }
+    update_part(part_id, updated)
     return redirect(url_for('main.QC'))
 
 @main.route('/reject_qc/<int:part_id>', methods=['POST'])
 def reject_qc(part_id):
-    part = get_part_by_id(part_id)
-    part['qc_attempts'] += 1
-    part['progress'] = 'Awaiting_Machining'
-    update_part(part_id, part)
+    existing = get_part_by_id(part_id)
+    updated = {
+        'name': existing[1],
+        'photo': existing[2],
+        'description': existing[3],
+        'priority': existing[4],
+        'number_of_parts': existing[5],
+        'machine_type': existing[6],
+        'difficulty': existing[7],
+        'tolerance': existing[8],
+        'assigned_machinist': existing[9],
+        'drawing_sheet_creator': existing[10],
+        'mech_type': existing[11],
+        'progress': 'Awaiting_Machining',
+        'qc_attempts': existing[13] + 1
+    }
+    update_part(part_id, updated)
     return redirect(url_for('main.QC'))
 
 @main.route('/personalPartsView/<int:person_id>')
 def personal_parts_view(person_id):
     person = get_person_by_id(person_id)
-    parts = get_parts_by_person(person_id)
-    completed_parts = [part for part in parts if part[6] == 'Completed']
-    in_progress_parts = [part for part in parts if part[6] == 'In Progress']
-    return render_template('personalPartsView.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
+    # Use person's name to fetch parts assigned to them
+    parts = get_parts_by_person(person[1])
+    completed_parts = [p for p in parts if p[12] == 'Completed']
+    in_progress_parts = [p for p in parts if p[12] == 'In Progress']
+    return render_template('personalPartsView.html',
+                           person=person,
+                           completed_parts=completed_parts,
+                           in_progress_parts=in_progress_parts)
 
 @main.route('/search_person')
 def search_person():
@@ -146,15 +181,16 @@ def search_person():
     person = get_person_by_name(name)
     if person:
         parts = get_parts_by_person(person[0])
-        completed_parts = [part for part in parts if part[6] == 'Completed']
-        in_progress_parts = [part for part in parts if part[6] == 'In Progress']
-        return render_template('personalPartsView.html', person=person, completed_parts=completed_parts, in_progress_parts=in_progress_parts)
-    else:
-        return redirect(url_for('main.stats'))
+        completed_parts = [p for p in parts if p[12] == 'Completed']
+        in_progress_parts = [p for p in parts if p[12] == 'In Progress']
+        return render_template('personalPartsView.html', person=person,
+                               completed_parts=completed_parts,
+                               in_progress_parts=in_progress_parts)
+    return redirect(url_for('main.stats'))
 
 @main.route('/autocomplete', methods=['GET'])
 def autocomplete():
-    search = request.args.get('q')
+    search = request.args.get('q', '')
     people = get_all_people()
     results = [person[1] for person in people if search.lower() in person[1].lower()]
     return jsonify(results)

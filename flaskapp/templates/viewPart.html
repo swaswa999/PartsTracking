@@ -10,7 +10,7 @@
 <div class="container">
     <h1>{{ part[1] }}</h1>
     <div class="part-details">
-        <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" class="pdf-viewer" />
+        <embed src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}" type="application/pdf" class="pdf-viewer" />
         <p><strong>Description:</strong> {{ part[3] }}</p>
         <p><strong>Priority:</strong> 
             {% for i in range(part[4] | int) %}

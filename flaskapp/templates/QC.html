@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Quality Control{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/QC.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Quality Control</h1>
+    <div class="parts-list">
+        {% for part in parts %}
+        <div class="part-box" onclick="toggleDetails(this)">
+            <embed
+                src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}"
+                type="application/pdf"
+                width="100%"
+                height="150px" />
+            <h3>{{ part[1] }}</h3>
+            <div class="part-details" style="display: none;">
+                <p><strong>Description:</strong> {{ part[3] }}</p>
+                <p><strong>Priority:</strong> {{ part[4] }}</p>
+                <p><strong>Number of Parts:</strong> {{ part[5] }}</p>
+                <p><strong>Machine Type:</strong> {{ part[6] }}</p>
+                <p><strong>Difficulty:</strong> {{ part[7] }}</p>
+                <p><strong>Tolerance:</strong> {{ part[8] }}</p>
+                <p><strong>Assigned Machinist:</strong> {{ part[9] }}</p>
+                <p><strong>QC Attempts:</strong> {{ part[13] }}</p>
+                <form action="{{ url_for('main.approve_qc', part_id=part[0]) }}" method="post">
+                    <button type="submit">Approve QC</button>
+                </form>
+                <form action="{{ url_for('main.reject_qc', part_id=part[0]) }}" method="post">
+                    <button type="submit">Reject QC</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script>
+function toggleDetails(element) {
+    const details = element.querySelector('.part-details');
+    details.style.display = (details.style.display === 'none') ? 'block' : 'none';
+}
+</script>
+{% endblock %}

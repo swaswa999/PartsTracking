@@ -8,23 +8,12 @@
 
 {% block content %}
 <div class="container">
-    <h1>Parts List</h1>
-    <div class="sort-options">
-        <label for="sort-by">Sort by:</label>
-        <select id="sort-by" onchange="sortParts()">
-            <option value="name">Name</option>
-            <option value="mech_type">Mech Type</option>
-            <option value="progress">Progress</option>
-            <option value="priority">Priority</option>
-            <option value="difficulty">Difficulty</option>
-            <option value="machine_type">Machine Type</option>
-        </select>
-    </div>
+    <h1>View Parts</h1>
     <div class="parts-grid" id="parts-grid">
         {% for part in parts %}
-        <div class="part-box" data-name="{{ part[1] }}" data-mech_type="{{ part[10] }}" data-progress="{{ part[11] }}" data-priority="{{ part[3] }}" data-difficulty="{{ part[6] }}" data-machine_type="{{ part[5] }}">
+        <div class="part-box">
             <a href="{{ url_for('main.view_part', part_id=part[0]) }}">
-                <embed src="{{ url_for('static', filename='data/partsPhoto/' + part[1] + '.pdf') }}" type="application/pdf" width="100%" height="150px" />
+                <embed src="{{ url_for('static', filename='partsStudio/' + part[1] + '.pdf') }}" type="application/pdf" width="100%" height="150px" />
                 <h3>{{ part[1] }}</h3>
             </a>
         </div>
